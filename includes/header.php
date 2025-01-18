@@ -9,7 +9,6 @@
 </head>
 <body>
     <nav>
-        <a href="home.php">Home</a>
-        <a href="meal_plans.php">Meal Plans</a>
-        <a href="logout.php">Logout</a>
+        <a href="../pages/home.php">Home</a>
+        <a href="../process_logout.php">Logout</a>
     </nav>

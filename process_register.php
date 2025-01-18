@@ -17,9 +17,21 @@
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);
         }
+
+        // Check if the username is available
+        $stmt = $conn->prepare("SELECT id FROM user WHERE username = ?");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if (($row = $result->fetch_assoc()) > 0) {
+            // Redirect to the register page
+            $_SESSION['error'] = "Username already exists!";
+            header("Location: ./pages/register.php");
+            exit;
+        }
     
         // Insert the new user into the database
-        $stmt = $conn->prepare("INSERT INTO users (first_name, last_name, username, password_hash) VALUES (?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO user (first_name, last_name, username, password_hash) VALUES (?, ?, ?, ?)");
         $stmt->bind_param("ssss", $first_name, $last_name, $username, $password_hash);
     
         if ($stmt->execute()) {
@@ -28,7 +40,7 @@
             $_SESSION['username'] = $username;
             
             // Redirect to the meal plans page
-            header("Location: meal_plans.php");
+            header("Location: ./pages/home.php");
             exit;
         } else {
             echo "Error: " . $stmt->error;
